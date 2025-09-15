@@ -17,10 +17,59 @@ df['FECHA_HECHOS'] = pd.to_datetime(df['FECHA_HECHOS'], errors='coerce')
 df_serie_tiempo = df.copy()
 df_serie_tiempo['FECHA_HECHOS'] = df['FECHA_HECHOS'].dt.date
 
+max_municipio = df['MUNICIPIO_HECHOS'].value_counts().index[0].upper()
+max_cantidad_municipio = df['MUNICIPIO_HECHOS'].value_counts().iloc[0]
+
 #construir la pagina
-st.set_page_config(page_title='Análisis de Datos de Delitos', layout='wide')
-st.header('Análisis de Datos de Delitos')
-st.dataframe(df)
+#st.set_page_config(page_title='Análisis de Datos de Delitos', layout='wide')
+st.markdown(
+    """
+    <style>
+    .block-container {
+    padding: 1rem 2rem 2rem 2rem;
+    max-width: 1600px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+st.image('img/encabezado.png', use_container_width=True)
+
+#Grafico de barras apiladas por departamento y tipo de delito
+st.markdown('<h2>Delitos por Departamento</h2>', unsafe_allow_html=True)
+df_delitos = df.groupby(['DEPARTAMENTO', 'DELITO']).size().reset_index(name='conteo')
+fig = px.bar(df_delitos, x='DEPARTAMENTO', y='conteo', color='DELITO', barmode='stack')
+st.plotly_chart(fig, key="bar_departamento")
+fig.update_layout(showlegend=False, height=400)
+
+#Crear 4 columnas para las Tatjetas
+col1, col2, col3, col4 = st.columns(4)
+
+with col1:
+    #Tarjetas 1 - Municipio con mas delitos
+    st.markdown(f"""<h3 style=
+                    'color:#F2A88D;
+                    background-color:#FFF6F5;
+                    border:2px solid #F2A88D;
+                    border-radius:10px; padding:10px;
+                    text-align:center'>
+                    Municipio con más delitos: {max_municipio}</h3><br>""",
+                    unsafe_allow_html=True)
+
+with col2:
+#Tarjetas 2 - 
+    st.markdown(f"""<h3 style=
+                'color:#F2A88D;
+                background-color:#FFF6F5;
+                border:2px solid #F2A88D;
+                border-radius:10px; 
+                padding:10px;
+                text-align:center'>
+                Delitos reportados<br> {max_cantidad_municipio} </h3><br>""",
+                unsafe_allow_html=True)
+
+        
 
 st.subheader('Tipo de Delito')
 delitos = df['DELITO'].value_counts()
@@ -43,10 +92,14 @@ fig.update_traces(textposition='outside', textinfo='percent+label')
 fig.update_layout(showlegend=False, height=400)
 st.plotly_chart(fig)
 
-df_delitos = df.groupby(['DEPARTAMENTO', 'DELITO']).size().reset_index(name='conteo')
-fig = px.bar(df_delitos, x='DEPARTAMENTO', y='conteo', color='DELITO', barmode='stack')
-st.plotly_chart(fig)
+
+
+
 st.write(df_delitos)
+
+st.subheader("Tipo de Delito")
+delitos = df['DELITO'].value_counts()
+st.bar_chart(delitos)
 
 
 
