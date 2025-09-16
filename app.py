@@ -6,6 +6,9 @@ import plotly.express as px
 url = 'https://github.com/lucastandelosrios-lang/Proyecto_BootCamp/raw/refs/heads/main/datos_generales_ficticios.csv'
 df=pd.read_csv(url, sep=';', encoding='utf-8')
 
+url_mapa = "https://github.com/juliandariogiraldoocampo/ia_taltech/raw/refs/heads/main/fiscalia/datos_mapa.csv"
+df_mapa = pd.read_csv(url_mapa)
+
 #Crear lista de los columnas de interes
 selected_columns = ['FECHA_HECHOS', 'DELITO', 'ETAPA', 'FISCAL_ASIGNADO', 'DEPARTAMENTO', 'MUNICIPIO_HECHOS']
 #actualizo el dataframe -df- con las columnas de interes ordenadas por fceha y reseteo el indice
@@ -43,7 +46,22 @@ st.markdown(
 st.image('img/encabezado.png', use_container_width=True)
 
 #MAPA
-
+fig = px.scatter_map(
+    df_mapa,
+    lat="Lat",
+    lon="Long",
+    color="CATEGORIA",
+    color_discrete_sequence=px.colors.qualitative.Antique,
+	# color_discrete_sequence=px.colors.sequential.Viridis,
+	hover_name="NOMBRE",
+	size_max=25,
+	height=700,
+    zoom=12,
+	# map_style="open-street-map"
+	map_style="carto-darkmatter"
+	# map_style="carto-positron"
+)
+st.plotly_chart(fig)
 
 
 
