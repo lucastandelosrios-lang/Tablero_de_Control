@@ -42,6 +42,11 @@ st.markdown(
 
 st.image('img/encabezado.png', use_container_width=True)
 
+#MAPA
+
+
+
+
 #Grafico de barras apiladas por departamento y tipo de delito
 st.markdown('<h2>Delitos por Departamento</h2>', unsafe_allow_html=True)
 df_delitos = df.groupby(['DEPARTAMENTO', 'DELITO']).size().reset_index(name='conteo')
